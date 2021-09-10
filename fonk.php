@@ -236,3 +236,9 @@ function wp_js_version_kaldırma( $src ) {
     
       return $out;
     }  
+
+  function ilkBuyuk($str) {
+    $str = str_replace('i', 'İ',$str);
+    $str = str_replace('I', 'ı',$str);
+    return ltrim(mb_convert_case($str, MB_CASE_TITLE, 'UTF-8'));
+    }
