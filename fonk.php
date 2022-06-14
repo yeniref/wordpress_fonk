@@ -415,3 +415,17 @@ function ucwords_tr($gelen){
   
     return $gelen;
   }
+
+
+/* thumbnail title change to post title */
+add_filter( 'post_thumbnail_html', 'meks_post_thumbnail_alt_change', 10, 5 );
+
+/* Function which will replace alt atribute to post title */
+function meks_post_thumbnail_alt_change( $html, $post_id, $post_thumbnail_id, $size, $attr ) {
+
+	$post_title = get_the_title();
+	$html = preg_replace( '/(alt=")(.*?)(")/i', '$1'.esc_attr( $post_title ).'$3', $html );
+
+	return $html;
+
+}
