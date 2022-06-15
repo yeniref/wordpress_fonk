@@ -429,3 +429,21 @@ function meks_post_thumbnail_alt_change( $html, $post_id, $post_thumbnail_id, $s
 	return $html;
 
 }
+
+	function http_to_https(){
+		if ( (isset($_SERVER['HTTP_X_FORWARDED_PORT'] ) && ( '443' == $_SERVER['HTTP_X_FORWARDED_PORT'] ))
+	|| (isset($_SERVER['HTTP_CF_VISITOR']) && $_SERVER['HTTP_CF_VISITOR'] == '{"scheme":"https"}')) {
+	$_SERVER['HTTPS'] = 'on';
+	}
+	if (!(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || 
+	$_SERVER['HTTPS'] == 1) ||  
+	isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&   
+	$_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))
+	{
+	$redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	header('HTTP/1.1 301 Moved Permanently');
+	header('Location: ' . $redirect);
+	exit();
+	}
+	}
+	add_action( 'init', 'http_to_https' );
