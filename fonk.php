@@ -447,3 +447,8 @@ function meks_post_thumbnail_alt_change( $html, $post_id, $post_thumbnail_id, $s
 	}
 	}
 	add_action( 'init', 'http_to_https' );
+
+   function klasik_widget() {
+    remove_theme_support( 'widgets-block-editor' );
+}
+add_action( 'after_setup_theme', 'klasik_widget' );
