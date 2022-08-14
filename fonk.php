@@ -1,5 +1,29 @@
 <?php
 
+	if ( ! function_exists( 'wpartisan_set_no_found_rows' ) ) :
+		function wpartisan_set_no_found_rows( \WP_Query $wp_query ) {
+		$wp_query->set( 'no_found_rows', true );
+		}
+		endif;
+		add_filter( 'pre_get_posts', 'wpartisan_set_no_found_rows', 10, 1 );
+		if ( ! function_exists( 'sayfa_gecis_hizlandir' ) ) :
+		function sayfa_gecis_hizlandir( $clauses, \WP_Query $wp_query ) {
+		if ( $wp_query->is_singular() ) {
+		return $clauses;
+		}
+		global $wpdb;
+		$where = isset( $clauses[ 'where' ] ) ? $clauses[ 'where' ] : '';
+		$join = isset( $clauses[ 'join' ] ) ? $clauses[ 'join' ] : '';
+		$distinct = isset( $clauses[ 'distinct' ] ) ? $clauses[ 'distinct' ] : '';
+		$wp_query->found_posts = $wpdb->get_var( "SELECT $distinct COUNT(*) FROM {$wpdb->posts} $join WHERE 1=1 $where" );
+		$posts_per_page = ( ! empty( $wp_query->query_vars['posts_per_page'] ) ? absint( $wp_query->query_vars['posts_per_page'] ) : absint( get_option( 'posts_per_page' ) ) );
+		$wp_query->max_num_pages = ceil( $wp_query->found_posts / $posts_per_page );
+		return $clauses;
+		}
+		endif;
+		add_filter( 'posts_clauses', 'sayfa_gecis_hizlandir', 10, 2 );
+
+
 function turkcetarih_formati($format, $datetime = 'now'){
     date_default_timezone_set('Europe/Istanbul');
     $z = date("$format", strtotime($datetime));
