@@ -476,3 +476,13 @@ function meks_post_thumbnail_alt_change( $html, $post_id, $post_thumbnail_id, $s
     remove_theme_support( 'widgets-block-editor' );
 }
 add_action( 'after_setup_theme', 'klasik_widget' );
+
+
+function bloginfo_array() {
+    $fields = array('name', 'description', 'wpurl', 'url', 'admin_email', 'charset', 'version', 'html_type', 'text_direction', 'language');
+    $data = array();
+    foreach($fields as $field) {
+        $data[$field] = get_bloginfo($field);
+    }
+    return $data;
+}
